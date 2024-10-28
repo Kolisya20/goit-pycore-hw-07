@@ -1,9 +1,11 @@
-from models.field import Name, Phone
+from models.field import Name, Phone, Birthday
+from datetime import datetime, timedelta
 
 class Record:
     def __init__(self, name) -> None:
         self.name = Name(name)
         self.phones = []
+        self.birthday = None
 
     def add_phone(self, phone):
         phone_obj = Phone(phone)
@@ -32,6 +34,19 @@ class Record:
                 return phone_obj
         return None
     
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
+
+    def days_to_birthday(self):
+        if not self.birthday:
+            return None
+        today = datetime.now().date()
+        next_birthdays = self.birthday.value.replace(year=today.year)
+        if next_birthdays < today:
+            next_birthdays = next_birthdays.replace(year=today.year + 1)
+        return (next_birthdays - today).days
+
     def __str__(self):
         phones_str = "; ".join(phone.value for phone in self.phones)
-        return f"Contact name: {self.name.value}, phones: {phones_str}"
+        birthday_str = f", birthday: {self.birthday}" if self.birthday else ""
+        return f"Contact name: {self.name.value}, phones: {phones_str}{birthday_str}"
