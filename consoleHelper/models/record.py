@@ -6,7 +6,7 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
-
+    
     def add_phone(self, phone):
         phone_obj = Phone(phone)
         self.phones.append(phone_obj)
@@ -35,7 +35,16 @@ class Record:
         return None
     
     def add_birthday(self, birthday):
-        self.birthday = Birthday(birthday)
+        if not self.birthday:
+            self.birthday = Birthday(birthday)
+        else:
+            raise ValueError("Birthday already exists.")
+
+    def show_birthday(self):
+        if self.birthday:
+            return self.birthday
+        else:
+            return f"{self.name.value} has no birthday set."
 
     def days_to_birthday(self):
         if not self.birthday:
